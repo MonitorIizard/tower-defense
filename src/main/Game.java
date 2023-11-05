@@ -1,3 +1,11 @@
+package main;
+
+import inputs.KeyboardListener;
+import inputs.MyMouseListener;
+import scener.Menu;
+import scener.Playing;
+import scener.Setting;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -5,28 +13,44 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Game extends JFrame implements Runnable {
-
-    private BufferedImage img;
     private GameScreen gameScreen;
     private Thread gameThread;
 
     private final double FPS_SET = 120.0;
     private final double UPS_SET = 60.0;
 
+    private MyMouseListener myMouseListener;
+    private KeyboardListener keyboardListener;
+
+    // Classes
+    private Render render;
+    private Menu menu;
+    private Playing playing;
+    private Setting setting;
+
     public Game() {
-        importImg();
-        gameScreen = new GameScreen(img);
+        initClasses();
         add(gameScreen);
+        pack();
     }
 
-    private void importImg() {
-        InputStream is = getClass().getResourceAsStream("/sprite-atlas.png");
+    private void initClasses() {
+        render = new Render(this);
+        gameScreen = new GameScreen(this);
+        menu = new Menu(this);
+        playing = new Playing(this);
+        setting = new Setting(this);
+    }
 
-        try {
-            img = ImageIO.read(is);
-        } catch (IOException e)  {
-            e.printStackTrace();
-        }
+    private void initInput() {
+        myMouseListener = new MyMouseListener();
+        keyboardListener = new KeyboardListener();
+
+        addMouseListener(myMouseListener);
+        addMouseMotionListener(myMouseListener);
+        addKeyListener(keyboardListener);
+
+        requestFocus();
     }
 
     private void start() {
@@ -47,17 +71,19 @@ public class Game extends JFrame implements Runnable {
 
         long lastTimeCheck = System.currentTimeMillis();
 
-        while (true) {
+        long now;
 
+        while (true) {
+            now = System.nanoTime();
             //update
-            if ( System.nanoTime() - lastUpdate >= timePerUpdate) {
-                lastUpdate = System.nanoTime();
+            if ( now - lastUpdate >= timePerUpdate) {
+                lastUpdate = now;
                 updates++;
             }
 
             //render
-            if( System.nanoTime() - lastFrame >= timePerFrame) {
-                lastFrame = System.nanoTime();
+            if( now - lastFrame >= timePerFrame) {
+                lastFrame = now;
                 gameScreen.repaint();
                 frames++;
             }
@@ -70,18 +96,16 @@ public class Game extends JFrame implements Runnable {
             }
         }
 
-        //render
-        //update
-        //checking fps and ups
     }
 
     private void updateGame() {
 
-        //System.out.println("Game updated");
+        //System.out.println("main.Game updated");
     }
 
     public static void main( String[] args ) {
         Game game = new Game();
+        game.initInput();
         game.setSize(640, 640);
         game.setDefaultCloseOperation(EXIT_ON_CLOSE);
         game.setLocationRelativeTo(null);
@@ -90,6 +114,21 @@ public class Game extends JFrame implements Runnable {
         //game.loopGame(); -> game.start()
 
         game.start();
+    }
 
+    public Render getRender() {
+        return render;
+    }
+
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public Playing getPlaying() {
+        return playing;
+    }
+
+    public Setting getSetting() {
+        return setting;
     }
 }
