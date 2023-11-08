@@ -1,16 +1,11 @@
 package main;
 
-import inputs.KeyboardListener;
-import inputs.MyMouseListener;
+
 import scener.Menu;
 import scener.Playing;
 import scener.Setting;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class Game extends JFrame implements Runnable {
     private GameScreen gameScreen;
@@ -18,9 +13,6 @@ public class Game extends JFrame implements Runnable {
 
     private final double FPS_SET = 120.0;
     private final double UPS_SET = 60.0;
-
-    private MyMouseListener myMouseListener;
-    private KeyboardListener keyboardListener;
 
     // Classes
     private Render render;
@@ -40,17 +32,6 @@ public class Game extends JFrame implements Runnable {
         menu = new Menu(this);
         playing = new Playing(this);
         setting = new Setting(this);
-    }
-
-    private void initInput() {
-        myMouseListener = new MyMouseListener();
-        keyboardListener = new KeyboardListener();
-
-        addMouseListener(myMouseListener);
-        addMouseMotionListener(myMouseListener);
-        addKeyListener(keyboardListener);
-
-        requestFocus();
     }
 
     private void start() {
@@ -105,11 +86,12 @@ public class Game extends JFrame implements Runnable {
 
     public static void main( String[] args ) {
         Game game = new Game();
-        game.initInput();
+        game.gameScreen.initInput();
         game.setSize(640, 640);
         game.setDefaultCloseOperation(EXIT_ON_CLOSE);
         game.setLocationRelativeTo(null);
         game.setVisible(true);
+        game.setResizable(false);
 
         //game.loopGame(); -> game.start()
 

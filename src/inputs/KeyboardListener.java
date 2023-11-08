@@ -17,17 +17,17 @@ public class KeyboardListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_A) {
             System.out.println("A is pressed!");
-            GameStates.gameStates = MENU;
+            GameStates.gameState = MENU;
         }
 
         if(e.getKeyCode() == KeyEvent.VK_S) {
             System.out.println("S is pressed!");
-            GameStates.gameStates = PLAYING;
+            GameStates.gameState = PLAYING;
         }
 
         if(e.getKeyCode() == KeyEvent.VK_D) {
             System.out.println("D is pressed!");
-            GameStates.gameStates = SETTINGS;
+            GameStates.gameState = SETTINGS;
         }
     }
 
