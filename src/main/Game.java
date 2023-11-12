@@ -1,9 +1,13 @@
 package main;
 
 
-import scener.Menu;
-import scener.Playing;
-import scener.Setting;
+import helperMethod.LoadSave;
+import managers.TileManager;
+import objects.PathPoint;
+import scenes.Editor;
+import scenes.Menu;
+import scenes.Playing;
+import scenes.Setting;
 
 import javax.swing.*;
 
@@ -11,6 +15,7 @@ public class Game extends JFrame implements Runnable {
     private GameScreen gameScreen;
     private Thread gameThread;
 
+    private TileManager tileManager;
     private final double FPS_SET = 120.0;
     private final double UPS_SET = 60.0;
 
@@ -19,18 +24,22 @@ public class Game extends JFrame implements Runnable {
     private Menu menu;
     private Playing playing;
     private Setting setting;
+    private Editor editor;
 
     public Game() {
+        createDefaultLevel();
         initClasses();
         add(gameScreen);
         pack();
     }
 
     private void initClasses() {
+        tileManager = new TileManager();
         render = new Render(this);
         gameScreen = new GameScreen(this);
         menu = new Menu(this);
         playing = new Playing(this);
+        editor = new Editor(this);
         setting = new Setting(this);
     }
 
@@ -59,6 +68,7 @@ public class Game extends JFrame implements Runnable {
             //update
             if ( now - lastUpdate >= timePerUpdate) {
                 lastUpdate = now;
+                updateGame();
                 updates++;
             }
 
@@ -80,14 +90,24 @@ public class Game extends JFrame implements Runnable {
     }
 
     private void updateGame() {
-
-        //System.out.println("main.Game updated");
+        switch(GameStates.gameState) {
+            case MENU -> {
+                editor.update();
+            }
+            case PLAYING -> {
+                playing.update();
+            }
+            case EDIT -> {
+            }
+            case SETTINGS -> {
+            }
+        }
     }
 
     public static void main( String[] args ) {
         Game game = new Game();
         game.gameScreen.initInput();
-        game.setSize(640, 640);
+//        game.setSize(640, 64);
         game.setDefaultCloseOperation(EXIT_ON_CLOSE);
         game.setLocationRelativeTo(null);
         game.setVisible(true);
@@ -96,6 +116,16 @@ public class Game extends JFrame implements Runnable {
         //game.loopGame(); -> game.start()
 
         game.start();
+    }
+
+    private void createDefaultLevel() {
+        // 640 * 640 / 64 * 64 = 100
+        int[] arr = new int[100];
+        for ( int i = 0; i < arr.length; i++ ) {
+            arr[i] = 0;
+        }
+
+        LoadSave.CreateLevel("new level", arr);
     }
 
     public Render getRender() {
@@ -112,5 +142,13 @@ public class Game extends JFrame implements Runnable {
 
     public Setting getSetting() {
         return setting;
+    }
+
+    public Editor getEditor() {
+        return editor;
+    }
+
+    public TileManager getTileManager() {
+        return tileManager;
     }
 }

@@ -1,4 +1,4 @@
-package scener;
+package scenes;
 
 import main.Game;
 
@@ -32,6 +32,11 @@ public class Setting extends GameScene implements SceneMethods {
 
     @Override
     public void mouseReleased(int x, int y) {
+
+    }
+
+    @Override
+    public void mouseDragged(int x, int y) {
 
     }
 }
