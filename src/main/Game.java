@@ -27,8 +27,11 @@ public class Game extends JFrame implements Runnable {
     private Editor editor;
 
     public Game() {
+        LoadSave.CreateFolder();
+
         createDefaultLevel();
         initClasses();
+
         add(gameScreen);
         pack();
     }
@@ -120,7 +123,7 @@ public class Game extends JFrame implements Runnable {
 
     private void createDefaultLevel() {
         // 640 * 640 / 64 * 64 = 100
-        int[] arr = new int[100];
+        int[] arr = new int[(640 * 1280) / 64 * 64];
         for ( int i = 0; i < arr.length; i++ ) {
             arr[i] = 0;
         }
